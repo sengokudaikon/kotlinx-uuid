@@ -5,7 +5,7 @@
 // - Show manifest properties: true
 // - Show declarations: true
 
-// Library unique name: <app.softwork:kotlinx-uuid-sqldelight>
+// Library unique name: <com.github.sengokudaikon:kotlinx-uuid-sqldelight>
 final object app.softwork.uuid.sqldelight/UuidByteArrayAdapter : app.cash.sqldelight/ColumnAdapter<kotlin.uuid/Uuid, kotlin/ByteArray> { // app.softwork.uuid.sqldelight/UuidByteArrayAdapter|null[0]
     final fun decode(kotlin/ByteArray): kotlin.uuid/Uuid // app.softwork.uuid.sqldelight/UuidByteArrayAdapter.decode|decode(kotlin.ByteArray){}[0]
     final fun encode(kotlin.uuid/Uuid): kotlin/ByteArray // app.softwork.uuid.sqldelight/UuidByteArrayAdapter.encode|encode(kotlin.uuid.Uuid){}[0]
