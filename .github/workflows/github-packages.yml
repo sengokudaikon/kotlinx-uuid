@@ -48,7 +48,7 @@ jobs:
           echo "VERSION=${{ steps.version.outputs.version }}" >> ~/.gradle/gradle.properties
 
       - name: Publish to GitHub Packages
-        run: ./gradlew -Pversion=${{ steps.version.outputs.version }} publish
+        run: ./gradlew -Pversion=${{ steps.version.outputs.version }} publish -x buildKotlinToolingMetadata
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GROUP: com.github.sengokudaikon
