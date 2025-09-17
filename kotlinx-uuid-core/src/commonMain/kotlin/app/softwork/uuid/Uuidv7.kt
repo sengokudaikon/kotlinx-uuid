@@ -61,7 +61,7 @@ public fun Uuidv7(timeStamp: Long): Uuid {
                 (rnd[7].toULong() and 0xFFu shl 10) or
                 (rnd[8].toULong() and 0xFFu shl 2) or
                 ((rnd[9].toULong() and 0xFFu) shr 6)
-            ) and ((1uL shl 62) - 1uL)
+        ) and ((1uL shl 62) - 1uL)
 
     // variant=IETF (10b) in octet 8 - set bits 7..6 to 10 and keep low 6 bits from rand_b
     bytes[8] = (((randB shr 56).toInt() and 0x3F) or 0x80).toByte()
@@ -125,7 +125,7 @@ public fun Uuidv7(
                 (rnd[7].toULong() and 0xFFu shl 10) or
                 (rnd[8].toULong() and 0xFFu shl 2) or
                 ((rnd[9].toULong() and 0xFFu) shr 6)
-            ) and ((1uL shl 62) - 1uL)
+        ) and ((1uL shl 62) - 1uL)
 
     // variant=IETF (10b) in octet 8 - set bits 7..6 to 10 and keep low 6 bits from rand_b
     bytes[8] = (((randB shr 56).toInt() and 0x3F) or 0x80).toByte()
@@ -206,7 +206,7 @@ public object Uuidv7Monotonic {
                 (rnd[7].toULong() and 0xFFu shl 10) or
                 (rnd[8].toULong() and 0xFFu shl 2) or
                 ((rnd[9].toULong() and 0xFFu) shr 6)
-            ) and MASK_62
+        ) and MASK_62
     }
 
     private fun pack(
@@ -240,6 +240,25 @@ public object Uuidv7Monotonic {
         bytes[15] = (randB62 and 0xFFu).toByte()
         return Uuid.fromByteArray(bytes)
     }
+
+    internal fun resetForTests() {
+        lastMs = Long.MIN_VALUE
+        cntA12 = 0
+        cntB62 = 0u
+    }
+
+    internal fun forceStateForTests(
+        lastMs: Long,
+        randA12: Int,
+        randB62: ULong,
+    ) {
+        require(lastMs == Long.MIN_VALUE || (lastMs in 0..UNIX_48_TIMESTAMP)) {
+            "timeStamp $lastMs must be Long.MIN_VALUE or <= 48 bits"
+        }
+        this.lastMs = lastMs
+        cntA12 = randA12 and MASK_A12
+        cntB62 = randB62 and MASK_62
+    }
 }
 
 /**
@@ -264,18 +283,14 @@ public fun Uuidv7(
     random: Random,
 ): Uuid = Uuidv7(timeStamp = timeStamp.toEpochMilliseconds(), random = random)
 
-
 /**
  * The Uuidv7 48 bit big-endian unsigned number of Unix epoch timestamp in milliseconds
  */
 @OptIn(ExperimentalTime::class)
 public val Uuid.instant: Instant get() = Instant.fromEpochMilliseconds(unixTimeStamp)
 
-
 @OptIn(ExperimentalTime::class)
-public fun Uuid.Companion.v7(
-    timeStamp: Instant = Clock.System.now(),
-): Uuid = Uuidv7(timeStamp = timeStamp.toEpochMilliseconds())
+public fun Uuid.Companion.v7(timeStamp: Instant = Clock.System.now()): Uuid = Uuidv7(timeStamp = timeStamp.toEpochMilliseconds())
 
 @OptIn(ExperimentalTime::class)
 public fun Uuid.Companion.v7(
@@ -283,9 +298,8 @@ public fun Uuid.Companion.v7(
     random: Random,
 ): Uuid = Uuidv7(timeStamp = timeStamp.toEpochMilliseconds(), random = random)
 
-public fun Uuid.Companion.v7(
-    timeStamp: Long,
-): Uuid = Uuidv7(timeStamp = timeStamp)
+public fun Uuid.Companion.v7(timeStamp: Long): Uuid = Uuidv7(timeStamp = timeStamp)
+
 public fun Uuid.Companion.v7(
     timeStamp: Long,
     random: Random,
