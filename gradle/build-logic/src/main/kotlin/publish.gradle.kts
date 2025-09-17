@@ -57,6 +57,8 @@ signing {
 
 // https://youtrack.jetbrains.com/issue/KT-46466
 val signingTasks = tasks.withType<Sign>()
+val buildKotlinToolingMetadata = runCatching { tasks.named("buildKotlinToolingMetadata") }.getOrNull()
 tasks.withType<AbstractPublishToMaven>().configureEach {
     dependsOn(signingTasks)
+    buildKotlinToolingMetadata?.let { dependsOn(it) }
 }
